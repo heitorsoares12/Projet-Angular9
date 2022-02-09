@@ -58,7 +58,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     this.setCurrentAction();
     this.buildEntryForm();
     this.loadEntry();
-    this.loadcategories();
+    this.loadCategories();
   }
 
   ngAfterContentChecked(){
@@ -124,7 +124,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
-  private loadcategories() {
+  private loadCategories() {
     this.categoryService.getAll().subscribe(
       categories => this.categories = categories
     );
