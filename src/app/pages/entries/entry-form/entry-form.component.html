@@ -1,0 +1,62 @@
+<nav class="mb-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+    <li class="breadcrumb-item"><a routerLink="/entries">Lançamentos</a></li>
+    <li class="breadcrumb-item active">{{ pageTitle }}</li>
+  </ol>
+</nav>
+
+<div class="row mb-4">
+  <div class="col-md-9">
+    <h1 class="h2 border-left pl-2">
+      {{ pageTitle }}
+    </h1>
+  </div>
+  <div class="col-md-3">
+    <button type="button" class="btn btn-primary float-right" routerLink="/entries">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+        <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z"></path>
+      </svg>
+      Voltar
+    </button>
+  </div>
+</div>
+
+<form [formGroup]="entryForm" (submit)="submitForm()">
+
+  <div class="card">
+    <div class="card-header">
+      Informações sobre o Lançamento
+    </div>
+
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="name">Nome</label>
+          <input type="text" class="form-control" id="name" formControlName="name">
+
+          <div class="text-danger" *ngIf="entryForm.get('name').invalid && entryForm.get('name').touched">
+            <div *ngIf="entryForm.get('name').errors.required">dado obrigatorio</div>
+            <div *ngIf="entryForm.get('name').errors.minlength">deve ter no minimo 2 caracteres</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-8">
+          <label for="description">Descrição</label>
+          <input type="text" class="form-control" id="description" formControlName="description">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="alert alert-danger mt-4" *ngIf="serverErrorMessages">
+    <strong>Erro no servidor:</strong>
+    <ul>
+      <li *ngFor="let error of serverErrorMessages"> {{ error }}</li>
+    </ul>
+  </div>
+  <button [disabled]="submittingForm || entryForm.invalid" type="submit" class="btn btn-primary btn-lg float-right mt-3">
+    Salvar
+  </button>
+</form>
