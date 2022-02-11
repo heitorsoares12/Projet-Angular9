@@ -1,12 +1,16 @@
-import { BaseResourceService } from 'src/app/shared/services/base-resource.service';
-import { BaseResourceModel } from 'src/app/shared/models/base-resource.model';
-import { AfterContentChecked, OnInit, Injector } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import toastr from 'toastr';
+import { OnInit, AfterContentChecked, Injector } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 
-export abstract class BaseResourceFormComponent<T extends BaseResourceModel> implements OnInit, AfterContentChecked {
+import { BaseResourceModel } from "../../models/base-resource.model"
+import { BaseResourceService } from "../../services/base-resource.service"
+
+import { switchMap } from "rxjs/operators";
+
+import toastr from "toastr";
+
+
+export abstract class BaseResourceFormComponent<T extends BaseResourceModel> implements OnInit, AfterContentChecked{
 
   currentAction: string;
   resourceForm: FormGroup;
@@ -37,27 +41,26 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   ngAfterContentChecked(){
     this.setPageTitle();
-
   }
 
-  submitForm() {
+  submitForm(){
     this.submittingForm = true;
 
-    if (this.currentAction == "new")
+    if(this.currentAction == "new")
       this.createResource();
     else // currentAction == "edit"
       this.updateResource();
   }
 
 
-  //PRIVATE METHODS
+  // PRIVATE METHODS
+
   protected setCurrentAction() {
-    if (this.route.snapshot.url[0].path == "new")
+    if(this.route.snapshot.url[0].path == "new")
       this.currentAction = "new"
     else
       this.currentAction = "edit"
   }
-
 
   protected loadResource() {
     if (this.currentAction == "edit") {
@@ -68,9 +71,9 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
       .subscribe(
         (resource) => {
           this.resource = resource;
-          this.resourceForm.patchValue(resource) //binds loaded resource data to ResourceForm
+          this.resourceForm.patchValue(resource) // binds loaded resource data to resourceForm
         },
-        (error) => alert('Ocorreu um erro no servidor, tente novamente mais tarde!')
+        (error) => alert('Ocorreu um erro no servidor, tente mais tarde.')
       )
     }
   }
@@ -78,7 +81,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   protected setPageTitle() {
     if (this.currentAction == 'new')
-    this.pageTitle = this.creationPageTitle();
+      this.pageTitle = this.creationPageTitle();
     else{
       this.pageTitle = this.editionPageTitle();
     }
@@ -92,46 +95,50 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     return "Edição"
   }
 
+
   protected createResource(){
-    const resource: T = this.jsonDataToResourceFn(this.resourceForm.value)
+    const resource: T = this.jsonDataToResourceFn(this.resourceForm.value);
 
     this.resourceService.create(resource)
-    .subscribe(
-      resource => this.actionsForSucess(resource),
-      error => this.actionsForErro(error)
-    )
+      .subscribe(
+        resource => this.actionsForSuccess(resource),
+        error => this.actionsForError(error)
+      )
   }
+
 
   protected updateResource(){
-    const resource: T = this.jsonDataToResourceFn(this.resourceForm.value)
+    const resource: T = this.jsonDataToResourceFn(this.resourceForm.value);
 
     this.resourceService.update(resource)
-    .subscribe(
-      resource => this.actionsForSucess(resource),
-      error => this.actionsForErro(error)
-    )
+      .subscribe(
+        resource => this.actionsForSuccess(resource),
+        error => this.actionsForError(error)
+      )
   }
 
-  protected actionsForSucess(resource: T) {
-    toastr.success("Solicitação processada com sucesso!")
+
+  protected actionsForSuccess(resource: T){
+    toastr.success("Solicitação processada com sucesso!");
 
     const baseComponentPath: string = this.route.snapshot.parent.url[0].path;
 
-    //redirect/reload component page
+    // redirect/reload component page
     this.router.navigateByUrl(baseComponentPath, {skipLocationChange: true}).then(
       () => this.router.navigate([baseComponentPath, resource.id, "edit"])
     )
   }
 
-  protected actionsForErro(error) {
-    toastr.error("Ocorreu um erro ao processar sua solicitação!");
+
+  protected actionsForError(error){
+    toastr.error("Ocorreu um erro ao processar a sua solicitação!");
 
     this.submittingForm = false;
 
     if(error.status === 422)
       this.serverErrorMessages = JSON.parse(error._body).errors;
     else
-      this.serverErrorMessages = ["Falha na comunicacao com o servidor. Por favor tente novamente!"]
+      this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor, tente mais tarde."]
   }
 
 
