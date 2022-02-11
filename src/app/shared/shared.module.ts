@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BreadCrumComponent } from './components/bread-crum/bread-crum.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { FormFieldErrorComponent } from './components/form-field-error/form-field-error.component';
 
 
 
 @NgModule({
-  declarations: [BreadCrumComponent, PageHeaderComponent],
+  declarations: [BreadCrumComponent, PageHeaderComponent, FormFieldErrorComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -22,7 +23,8 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 
     //shared components
     BreadCrumComponent,
-    PageHeaderComponent
+    PageHeaderComponent,
+    FormFieldErrorComponent
   ]
 })
 export class SharedModule { }
