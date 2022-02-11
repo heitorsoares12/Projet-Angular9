@@ -3,11 +3,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BreadCrumComponent } from './components/bread-crum/bread-crum.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 
 
 
 @NgModule({
-  declarations: [BreadCrumComponent],
+  declarations: [BreadCrumComponent, PageHeaderComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -20,7 +21,8 @@ import { BreadCrumComponent } from './components/bread-crum/bread-crum.component
     RouterModule,
 
     //shared components
-    BreadCrumComponent
+    BreadCrumComponent,
+    PageHeaderComponent
   ]
 })
 export class SharedModule { }
